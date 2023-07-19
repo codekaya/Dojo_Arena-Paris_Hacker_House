@@ -1,14 +1,15 @@
 import { RightIcon } from '../../components/Icons'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useState } from 'react'
 import Button from '../../styles/button'
 import dead_icon from '../../../public/icons/character-dead-icon.svg'
 const GameHistory = () => {
   const { history } = useSelector((state) => state.game)
 
-  const [activeTab, setActiveTab] = useState('attacks')
+  const [activeTab, setActiveTab] = useState('hides')
 
   const renderAttacksHistory = (items) => {
+    console.log('items', items)
     return items?.map((item, index) => {
       const p1_hp_positive = item?.player1_hp_change
         ? item?.player1_hp_change > 0
@@ -20,16 +21,15 @@ const GameHistory = () => {
 
       return (
         <tr key={'history-attack-item_' + index} className='h-item-attack'>
-          {' '}
           <td className='time'>{item?.time}</td>
           <td className={'hp-change-1' + (p1_hp_positive ? ' green' : ' red')}>
             {(p1_hp_positive ? '+' : '') + (item?.player1_hp_change || '')}
           </td>
           <td className='player-1'>
             <div className='player-wrapper first'>
-              {item?.player1?.character_image && (
+              {item?.pixel_heroes_id != undefined && (
                 <img
-                  src={item?.player1?.character_image}
+                  src={`/characters/${item?.pixel_heroes_id}.svg`}
                   className='w-[13px] h-[17px]'
                   alt='Character Icon'
                 />

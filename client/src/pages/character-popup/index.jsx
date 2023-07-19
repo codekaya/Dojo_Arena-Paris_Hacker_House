@@ -2,7 +2,7 @@ import { DiscordIcon, HeartIcon, TwitterIcon } from '../../components/Icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCharacterPopupInfo } from '../../../stores/game-store'
 import { getPlayerById } from '../../../utils/player'
-import React, { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import InfoTooltip from '../info-tooltip'
 import Button from '../../styles/button'
 
@@ -92,7 +92,7 @@ const CharacterPopup = () => {
             <HeartIcon />
             Health
           </div>
-          <div className='c-detail-value'>{popupPlayerData?.player_hp}/4000</div>
+          <div className='c-detail-value'>{popupPlayerData?.health}/4000</div>
         </div>
         <div className='c-detail-group'>
           <div className='c-detail-title'>

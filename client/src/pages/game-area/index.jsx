@@ -1,13 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import AttackInput from '../attack-input'
 import Character from '../character'
 import InfoTooltip from '../info-tooltip'
-import { hunt, hide, getTokenIdOfPlayer } from '../../web3/functions'
-import web3Obj from '../../web3/index'
-import { connectWallet } from '../../web3/Wallet'
-import { NFT_CONTRACT_ADDR } from '../../../utils/constants'
-import { ethers } from 'ethers'
 import Button from '../../styles/button'
 
 const GameArea = () => {
@@ -32,7 +27,7 @@ const GameArea = () => {
                 {gameState?.players_by_states?.hunting?.map((player) => (
                   <Character
                     key={'character_' + player?.player_id}
-                    character_image={player?.character_image}
+                    character_image={`/characters/${player?.pixel_heroes_id}.svg`}
                     player_data={player}
                   />
                 ))}
@@ -44,7 +39,7 @@ const GameArea = () => {
                 {gameState?.players_by_states?.hiding?.map((player) => (
                   <Character
                     key={'character_' + player?.player_id}
-                    character_image={player?.character_image}
+                    character_image={`/characters/${player?.pixel_heroes_id}.svg`}
                     player_data={player}
                   />
                 ))}
@@ -58,7 +53,7 @@ const GameArea = () => {
                 {gameState?.players_by_states?.playing?.map((player) => (
                   <Character
                     key={'character_' + player?.player_id}
-                    character_image={player?.character_image}
+                    character_image={`/characters/${player?.pixel_heroes_id}.svg`}
                     player_data={player}
                   />
                 ))}
@@ -70,7 +65,7 @@ const GameArea = () => {
                 {gameState?.players_by_states?.attacking?.map((player) => (
                   <Character
                     key={'character_' + player?.player_id}
-                    character_image={player?.character_image}
+                    character_image={`/characters/${player?.pixel_heroes_id}.svg`}
                     player_data={player}
                   />
                 ))}

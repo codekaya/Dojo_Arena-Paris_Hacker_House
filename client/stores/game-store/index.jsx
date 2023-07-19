@@ -28,20 +28,28 @@ const initialState = {
   accounts: [],
   wallet_connected: false,
   current_game: {
-    result: {},
-    inProgress: false,
-  },
-
-  all_game: {
-    result: {},
-    inProgress: false,
+    _id: '',
+    game_id: '',
+    name: '',
+    nft_collection_address: '',
+    winner: '',
+    game_creator: '',
+    turn_duration: '',
+    max_players: '-',
+    num_players: '-',
+    start_time: '',
+    initial_hp: '',
+    hunger_level: '',
+    is_active: '',
+    current_tour: '',
+    entry_fee: '',
+    prize: '',
   },
 }
 
 export const fetchGameWithId = createAsyncThunk('game/fetchGameWithId', async (game_id) => {
   const url = urlFetchGameWithId()
   const res = await Axios.post(url, { game_id }, headers())
-  // console.log('RESSS', res.data)
 
   return res.data
 })
@@ -50,6 +58,9 @@ export const { reducer, actions } = createSlice({
   name: 'game',
   initialState,
   reducers: {
+    setCurrentGame: (state, action) => {
+      state.current_game = action.payload
+    },
     setPlayers: (state, action) => {
       return {
         ...state,
@@ -96,18 +107,6 @@ export const { reducer, actions } = createSlice({
       state.wallet_connected = action.payload
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(fetchGameWithId.fulfilled, (state, action) => {
-      state.current_game = { result: action.payload, inProgress: false }
-    }),
-      builder.addCase(fetchGameWithId.pending, (state, action) => {
-        state.current_game = { ...state.current_game, inProgress: true }
-      }),
-      builder.addCase(fetchGameWithId.rejected, (state, action) => {
-        state.current_game = { ...state.current_game, inProgress: false }
-        console.log('Hata:', action.error.message) // Hata mesajını konsola yazdırabilirsiniz
-      })
-  },
 })
 
 export const {
@@ -118,4 +117,5 @@ export const {
   setHistory,
   setAccounts,
   setWalletConnected,
+  setCurrentGame,
 } = actions

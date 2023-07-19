@@ -1,18 +1,7 @@
-const rand_character_image = () =>
-  [
-    '/public/characters/albert.png',
-    '/public/characters/blondie.png',
-    '/public/characters/clown.png',
-    '/public/characters/david.png',
-    '/public/characters/developer.png',
-    '/public/characters/doctor.png',
-    '/public/characters/dummy.png',
-    '/public/characters/gray.png',
-    '/public/characters/guy.png',
-    '/public/characters/Layer 22.png',
-    '/public/characters/liberty.png',
-    '/public/characters/playboy.png',
-  ][Math.floor(Math.random() * 12)]
+const rand_character_image = () => {
+  let randomIndex = Math.floor(Math.random() * 70 + 1)
+  return '/characters/' + randomIndex + '.svg'
+}
 
 const rand_current_state = () =>
   ['hunting', 'attacking', 'hiding', 'playing'][Math.floor(Math.random() * 4)]
@@ -51,22 +40,27 @@ const sortPlayersByHp = (players) => {
 
 export const seperatePlayersByState = (players) => {
   let seperatedPlayers = {
-    attacking: [],
-    hiding: [],
-    hunting: [],
     playing: [],
+    hunting: [],
+    hiding: [],
+    attacking: [],
   }
 
   players?.forEach((player) => {
-    if (seperatedPlayers[player?.current_state]) {
-      seperatedPlayers[player.current_state].push(player)
+    const player_move = player?.move
+    if (player_move === '1') {
+      seperatedPlayers['hunting'].push(player)
+    } else if (player_move === '2') {
+      seperatedPlayers['hiding'].push(player)
+    } else if (player_move === '3') {
+      seperatedPlayers['attacking'].push(player)
     }
   })
 
   seperatedPlayers.attacking = sortPlayersByHp(seperatedPlayers.attacking)
   seperatedPlayers.hiding = sortPlayersByHp(seperatedPlayers.hiding)
   seperatedPlayers.hunting = sortPlayersByHp(seperatedPlayers.hunting)
-  seperatedPlayers.playing = sortPlayersByHp(seperatedPlayers.playing)
+  seperatedPlayers.playing = sortPlayersByHp(players)
 
   return seperatedPlayers
 }
