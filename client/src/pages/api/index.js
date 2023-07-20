@@ -1,7 +1,7 @@
 export const REST_URL = 'https://dojoarena.onrender.com'
 
 export const getAllGames = async () => {
-  const res = await fetch(`${REST_URL}/games/get`)
+  const res = await fetch(`${REST_URL}/games/alive`)
   const data = await res.json()
 
   return data.user
@@ -46,7 +46,7 @@ export const getAttacks = async (game_id) => {
 
   const data = await res.json()
 
-  return [data.user]
+  return data.user
 }
 
 export const getHides = async (game_id) => {
@@ -60,7 +60,7 @@ export const getHides = async (game_id) => {
 
   const data = await res.json()
 
-  return [data.user]
+  return data.user
 }
 
 export const getHunts = async (game_id) => {
@@ -74,5 +74,5 @@ export const getHunts = async (game_id) => {
 
   const data = await res.json()
 
-  return [data.user]
+  return data.user
 }

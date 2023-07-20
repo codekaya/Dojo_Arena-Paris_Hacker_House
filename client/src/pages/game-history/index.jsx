@@ -1,16 +1,15 @@
 import { RightIcon } from '../../components/Icons'
 import { useSelector } from 'react-redux'
 import { useState } from 'react'
-import Button from '../../styles/button'
 import dead_icon from '../../../public/icons/character-dead-icon.svg'
 const GameHistory = () => {
   const { history } = useSelector((state) => state.game)
 
-  const [activeTab, setActiveTab] = useState('hides')
+  const [activeTab, setActiveTab] = useState('attacks')
 
   const renderAttacksHistory = (items) => {
-    console.log('items', items)
     return items?.map((item, index) => {
+      console.log('item', item)
       const p1_hp_positive = item?.player1_hp_change
         ? item?.player1_hp_change > 0
           ? true
@@ -34,7 +33,7 @@ const GameHistory = () => {
                   alt='Character Icon'
                 />
               )}
-              {item?.player1?.name || item?.player1?.player_id}
+              {item?.name || item?._id}
             </div>
           </td>
           <td className='arrow'>
@@ -46,12 +45,12 @@ const GameHistory = () => {
                 'player-wrapper second' + (item?.player2_hp_change === 'killed' ? ' dead' : '')
               }
             >
-              {item?.player2?.character_image && (
+              {item?.attacked_pixel_heroes_id !== undefined && (
                 <img
                   src={
                     item?.player2_hp_change === 'killed'
                       ? dead_icon
-                      : item?.player2?.character_image
+                      : `/characters/${item?.attacked_pixel_heroes_id}.svg`
                   }
                   className='w-[12.24px] h-4'
                   alt='Character Icon'
@@ -76,9 +75,9 @@ const GameHistory = () => {
           <td className='hp-change-1'></td>
           <td>
             <div className='player-wrapper'>
-              {item?.player?.character_image && (
+              {item?.pixel_heroes_id && (
                 <img
-                  src={item?.player?.character_image}
+                  src={`/characters/${item?.pixel_heroes_id}.svg`}
                   className='w-[13px] h-[17px]'
                   alt='Character Icon'
                 />
@@ -103,12 +102,12 @@ const GameHistory = () => {
           </td>
           <td>
             <div className={'player-wrapper ' + (item?.player_hp_change === 'dead' ? ' dead' : '')}>
-              {item?.player?.character_image && (
+              {item?.pixel_heroes_id && (
                 <img
                   src={
                     item?.player_hp_change === 'dead'
-                      ? '/public/icons/character-dead-icon.svg'
-                      : item?.player?.character_image
+                      ? '/icons/character-dead-icon.svg'
+                      : `/characters/${item?.pixel_heroes_id}.svg`
                   }
                   width={12.24}
                   height={16}
@@ -116,7 +115,7 @@ const GameHistory = () => {
                   alt='Character Icon'
                 />
               )}
-              {item?.player?.name || item?.player?.player_id}
+              {item?.player?.name || item?._id}
             </div>
           </td>
         </tr>
@@ -142,20 +141,10 @@ const GameHistory = () => {
         Game History
       </div>
 
-      <div className='flex gap-[6px] mx-[9px] mt-6 mb-0'>
-        <Button mode='history' active={activeTab === 'hunts'} onClick={() => setActiveTab('hunts')}>
-          Hunts
-        </Button>
-        <Button mode='history' active={activeTab === 'hides'} onClick={() => setActiveTab('hides')}>
-          Hides
-        </Button>
-        <Button
-          mode='history'
-          active={activeTab === 'attacks'}
-          onClick={() => setActiveTab('attacks')}
-        >
-          Attacks!
-        </Button>
+      <div className='flex justify-between px-4 gap-[6px] mx-[9px] mt-6 mb-0'>
+        <button onClick={() => setActiveTab('hunts')}>Hunts</button>
+        <button onClick={() => setActiveTab('hides')}>Hides</button>
+        <button onClick={() => setActiveTab('attacks')}>Attacks!</button>
       </div>
 
       <div className='relative w-full h-full text-white flex overflow-hidden mt-2'>

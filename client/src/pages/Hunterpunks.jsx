@@ -53,7 +53,7 @@ export default function HunterPunks() {
 
   return (
     <Layout bg_url='/main-bg.png'>
-      <div className='flex justify-center items-start gap-[10px] relative z-40 mt-20'>
+      <div className='flex justify-center items-start gap-[10px] z-0 relative mt-20'>
         <div className='w-[273px] shrink-0'>
           <CurrentPlayerInfo />
           {/* <button onClick={handleConnectWallet}>Connect wallet</button> */}
