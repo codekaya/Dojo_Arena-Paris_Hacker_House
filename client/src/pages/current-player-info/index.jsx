@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { EditIcon } from '../../components/Icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCurrentPlayerName } from '../../../stores/game-store'
@@ -14,14 +14,16 @@ const CurrentPlayerInfo = () => {
   const dispatch = useDispatch()
   const currentPlayer = useSelector((state) => state.game.current_player)
 
+  console.log('currentPlayer', currentPlayer)
+
   useEffect(() => {
-    if (currentPlayer?.player_data?.name) {
-      setPlayerName(currentPlayer?.player_data?.name)
+    if (currentPlayer?.name) {
+      setPlayerName(currentPlayer?.name)
     }
-  }, [currentPlayer?.player_data?.name])
+  }, [currentPlayer?.name])
 
   const handleCurrentPlayerNameChange = () => {
-    if (playerName?.length > 0 && !currentPlayer?.player_data?.name) {
+    if (playerName?.length > 0 && !currentPlayer?.name) {
       dispatch(setCurrentPlayerName(playerName))
     }
   }
@@ -30,9 +32,9 @@ const CurrentPlayerInfo = () => {
 
   // calculate and render hp active bars of current player
   const renderHpBars = useMemo(() => {
-    if (!currentPlayer?.player_data?.player_hp) return <></>
+    if (!currentPlayer?.health) return <></>
     //console.log("render hp bars");
-    let user_hp_bar_active_count = (currentPlayer?.player_data?.player_hp || 0) / HP_PER_BAR
+    let user_hp_bar_active_count = (currentPlayer?.health || 0) / HP_PER_BAR
 
     return Array.from({ length: 5 }).map((e, groupIndex) => {
       return (
@@ -52,7 +54,7 @@ const CurrentPlayerInfo = () => {
         </div>
       )
     })
-  }, [currentPlayer?.player_data?.player_hp])
+  }, [currentPlayer?.health])
 
   return (
     <>
@@ -61,9 +63,9 @@ const CurrentPlayerInfo = () => {
       </div>
       <div className='flex relative w-full h-[151px] items-center jst-center '>
         <div className='cardBgStyledIcon ' />
-        {currentPlayer?.player_data?.character_image && (
+        {currentPlayer?.pixel_heroes_id != undefined && (
           <img
-            src={currentPlayer?.player_data?.character_image}
+            src={`/characters/${currentPlayer?.pixel_heroes_id}.svg`}
             width={80}
             height={90}
             alt='Player Icon'
@@ -78,9 +80,9 @@ const CurrentPlayerInfo = () => {
           placeholder='Name Your Champion'
           value={playerName}
           onChange={handleNameInputChange}
-          disabled={Boolean(currentPlayer?.player_data?.name)}
+          disabled={Boolean(currentPlayer?.name)}
         />
-        {!currentPlayer?.player_data?.name && (
+        {!currentPlayer?.name && (
           <div
             className='absolute h-[21px] right-[14px] top-1 cursor-pointer opacity-10 hover:opacity-100 edit-icon'
             onClick={handleCurrentPlayerNameChange}
@@ -92,7 +94,7 @@ const CurrentPlayerInfo = () => {
       <div className='relative mt-[27px]'>
         <div className='text-white flex justify-between opacity-[85] text-[15px] pb-[2px] pl-1 pr-[11px]'>
           <span>HP</span>
-          <span>{currentPlayer?.player_data?.player_hp} / 4000</span>
+          <span>{currentPlayer?.player_hp} / 4000</span>
         </div>
         <div className='flex relative w-full h-6 justify-center gap-[5.5px] items-center'>
           <div className='cardBgStyledEmpty' />

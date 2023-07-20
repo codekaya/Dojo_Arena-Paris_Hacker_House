@@ -69,9 +69,7 @@ export const { reducer, actions } = createSlice({
       }
     },
     setCurrentPlayerInfo: (state, action) => {
-      if (state?.current_player) {
-        state.current_player.player_data = action.payload
-      }
+      state.current_player = action.payload
     },
     setCurrentPlayerName: (state, action) => {
       if (!action?.payload) return state

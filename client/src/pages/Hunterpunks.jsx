@@ -7,14 +7,21 @@ import CharacterPopup from './character-popup'
 import { useDispatch } from 'react-redux'
 
 import { useEffect } from 'react'
-import { setPlayers, setCurrentGame, setHistory } from '../../stores/game-store'
+import {
+  setPlayers,
+  setCurrentGame,
+  setHistory,
+  setCurrentPlayerInfo,
+} from '../../stores/game-store'
 
-import { getGame, getPlayers, getAttacks, getHides, getHunts } from './api'
+import { getGame, getPlayers, getAttacks, getHides, getHunts, getPlayer } from './api'
+import { useAccount } from '@starknet-react/core'
 import { useParams } from 'react-router-dom'
 
 export default function HunterPunks() {
   const dispatch = useDispatch()
   const params = useParams()
+  const { isConnected, address } = useAccount()
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -39,8 +46,6 @@ export default function HunterPunks() {
         hunts: await getHunts(game_id),
       }
 
-      console.log('history', history)
-
       return history
     }
 
@@ -50,6 +55,23 @@ export default function HunterPunks() {
       dispatch(setHistory(res))
     })
   }, [params?.game_id, dispatch])
+
+  useEffect(() => {
+    const fetchPlayer = async () => {
+      const game_id = params?.game_id
+      const player = await getPlayer(game_id, address)
+
+      return player
+    }
+
+    console.log('isConnected', isConnected)
+    if (isConnected && address) {
+      fetchPlayer().then((player) => {
+        console.log('player', player)
+        dispatch(setCurrentPlayerInfo(player))
+      })
+    }
+  }, [isConnected, address, params?.game_id, dispatch])
 
   return (
     <Layout bg_url='/main-bg.png'>
