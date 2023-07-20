@@ -5,6 +5,8 @@ import GameHistory from './game-history/index'
 import Layout from '../components/Layout'
 import CharacterPopup from './character-popup'
 import { useDispatch } from 'react-redux'
+import { Provider, Contract } from 'starknet'
+import { abi } from '../web3/calls'
 
 import { useEffect } from 'react'
 import {
@@ -21,7 +23,7 @@ import { useParams } from 'react-router-dom'
 export default function HunterPunks() {
   const dispatch = useDispatch()
   const params = useParams()
-  const { isConnected, address } = useAccount()
+  const { isConnected, address, account } = useAccount()
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -73,6 +75,27 @@ export default function HunterPunks() {
     }
   }, [isConnected, address, params?.game_id, dispatch])
 
+  const provider = new Provider({
+    sequencer: {
+      baseUrl: 'https://starknet-testnet.public.blastapi.io',
+      feederGatewayUrl: 'feeder_gateway',
+      gatewayUrl: 'gateway',
+    },
+  })
+
+  const contractAddress = '0x025c54cc9d49825338dfe117e4bbe94ac7bf006679f2cd0c50c3cba25457b24f'
+
+  const contract = new Contract(abi, contractAddress, provider)
+  contract.connect(account)
+
+  const nextTurnHandler = () => {
+    console.log('Next turn clicked')
+    const game_id = params?.game_id
+    contract.invoke('next_turn', [game_id]).then((res) => {
+      console.log(res)
+    })
+  }
+
   return (
     <Layout bg_url='/main-bg.png'>
       <div className='flex justify-center items-start gap-[10px] z-0 relative mt-20'>
@@ -90,6 +113,7 @@ export default function HunterPunks() {
         </div>
         <div className='w-[271px]'>
           <GameHistory />
+          <button onClick={nextTurnHandler}>Next Turn</button>
         </div>
       </div>
       <CharacterPopup />

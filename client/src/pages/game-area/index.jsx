@@ -2,17 +2,48 @@ import { useSelector } from 'react-redux'
 
 import AttackInput from '../attack-input'
 import Character from '../character'
-import InfoTooltip from '../info-tooltip'
-import Button from '../../styles/button'
+import { abi } from '../../web3/calls'
+import { useAccount } from '@starknet-react/core'
+import { Provider, Contract } from 'starknet'
+import { getPlayer } from '../api'
+import { useParams } from 'react-router-dom'
 
 const GameArea = () => {
   const gameState = useSelector((state) => state.game)
+  const params = useParams()
+  const { isConnected, address, account } = useAccount()
+
+  const provider = new Provider({
+    sequencer: {
+      baseUrl: 'https://starknet-testnet.public.blastapi.io',
+      feederGatewayUrl: 'feeder_gateway',
+      gatewayUrl: 'gateway',
+    },
+  })
+
+  const contractAddress = '0x025c54cc9d49825338dfe117e4bbe94ac7bf006679f2cd0c50c3cba25457b24f'
+
+  const contract = new Contract(abi, contractAddress, provider)
+  contract.connect(account)
 
   const handleHuntClick = async () => {
-    //console.log(web3Obj.nftContract);
-    //console.log(
-    //await getTokenIdOfPlayer(web3Obj.nftContract, "0x7F4940A7363e11f0f7C34e430338ed95A1D7a7bf")
-    //);
+    console.log('Hunt clicked')
+    const game_id = params?.game_id
+    const player_id = (await getPlayer(game_id, address)).player_id
+
+    contract.invoke('hunt', [game_id, player_id]).then((res) => {
+      console.log(res)
+    })
+  }
+
+  const handleHideClick = async () => {
+    console.log('Hide clicked')
+    const game_id = params?.game_id
+    const player_id = (await getPlayer(game_id, address)).player_id
+
+    contract.invoke('hide', [game_id, player_id]).then((res) => {
+      console.log(res)
+    })
   }
 
   return (
@@ -76,14 +107,14 @@ const GameArea = () => {
       </div>
 
       <div className='mt-[15px] flex gap-[17px]'>
-        <Button onClick={handleHuntClick}>
-          <InfoTooltip content='hunt' position={{ x: 'right' }} />
+        <button onClick={handleHuntClick} style={{ opacity: isConnected ? 1 : 0.5 }}>
+          {/* <InfoTooltip content='hunt' position={{ x: 'right' }} /> */}
           Hunt!
-        </Button>
-        <Button>
-          <InfoTooltip content='hide' position={{ x: 'right' }} />
+        </button>
+        <button onClick={handleHideClick} style={{ opacity: isConnected ? 1 : 0.5 }}>
+          {/* <InfoTooltip content='hide' position={{ x: 'right' }} /> */}
           Hide!
-        </Button>
+        </button>
       </div>
 
       <AttackInput />
