@@ -161,6 +161,7 @@ function GameCard(props) {
     participant,
     winner,
     setShowModal,
+    game_id,
   } = props
 
   const { status: wallet_status } = useAccount()
@@ -201,7 +202,7 @@ function GameCard(props) {
 
           {status === 'Ongoing' && participant && (
             <Link
-              to='/hunterpunks'
+              to={`/hunterpunks/${game_id}`}
               className='text-[14px] text-center hidden sm:block md:w-[15rem] bg-[#17532C] border border-[#4AE7A7] shadow-border_1 text-white font-bold py-2 px-4 rounded-full hover:bg-[#40F880] hover:border-white hover:text-white hover:shadow-button_2 active:bg-[#225E37] active:border-[#4AE7A7] active:text-[#63F275] duration-300'
             >
               Continue To Play
@@ -293,9 +294,11 @@ function GameList(props) {
           //   checked ? (game.status === 'Upcoming' ? game.isBriq : game.participated) : true,
           // )
           .map((game, index) => {
+            console.log(game)
             return (
               <GameCard
                 key={index}
+                game_id={game?.game_id}
                 image={game?.image_link}
                 title={game?.name}
                 description={game?.room_name}
